@@ -11,19 +11,10 @@ const create = {
     const name = await askUtils.stringAsk('write book name: ');
     const author = await askUtils.stringAsk('write book author: ');
     const price = await askUtils.numberAsk('write book price: ');
-    console.log(genresServices.list());
+    console.log(await genresServices.list());
+    const genreId = await askUtils.numberAsk('write book genre: ');
 
-    let genresArray = [];
-    try {
-      const genres = await askUtils.stringAsk(`write book genres (', '): `)
-      genresArray = genres.split(', ')
-        .map(value => parseInt(value, 10));
-    } catch (e) {
-      console.error('Error in the input genres')
-    }
-
-
-    return booksServices.create({ name, author, genres: genresArray, price });
+    return booksServices.create({ name, author, genreId, price });
   },
 };
 

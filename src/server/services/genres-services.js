@@ -1,31 +1,32 @@
 const timeSpend = require(`./timeSpend`);
+const { Genres } = require(`./db`);
 
 /*
 genre=
 name
 */
 
-class genresServices {
-  constructor(){
-    this.storage = []
-  }
 
-  create(data) {
+const insert = 'INSERT INTO genres(name) VALUES($1) RETURNING *'
+
+class genresServices {
+  async create(data) {
     timeSpend.startTimer();
-    this.storage.push(data);
+    await Genres.create(data);
     timeSpend.endTimer();
 
     return 'save genre';
   }
 
-  list() {
+  async list() {
     timeSpend.startTimer();
-    const list = '\n' + 'GENRES' + '\n'+ this.storage.map((genre, index) =>
+    const list = await Genres.findAll();
+    const toString = '\n GENRES \n'+ list.map((genre, index) =>
       (`${index}) name: ${genre.name}`)).join('\n')
 
     timeSpend.endTimer();
 
-    return list
+    return toString;
   }
 }
 

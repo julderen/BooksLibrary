@@ -1,4 +1,5 @@
 const timeSpend = require(`./timeSpend`);
+const { Books, Genres } = require(`./db`);
 
 /*
 book=
@@ -12,20 +13,22 @@ class booksServices {
     this.storage = []
   }
 
-  create(data) {
+  async create(data) {
     timeSpend.startTimer();
-    this.storage.push(data);
+    console.log(await Books.create(data));
     timeSpend.endTimer();
     return 'save book';
   }
 
-  list() {
+  async list() {
     timeSpend.startTimer();
-    const list = '\n BOOKS \n'+this.storage.map((book, index) =>
-        (`${index}) name: ${book.name}, author: ${book.author}, genres: ${book.genres}, price: ${book.price}`)).join('\n')
+    const list = await Books.findAll();
+    const toString = '\n BOOKS \n'+ list.map((book, index) =>
+      (`${index}) name: ${book.name}, author: ${book.author}, genre: ${book.genre}, price: ${book.price}`)).join('\n')
+
     timeSpend.endTimer();
 
-    return list
+    return toString
   }
 }
 
