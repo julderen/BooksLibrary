@@ -1,22 +1,32 @@
+const timeSpend = require(`./timeSpend`);
 
 /*
 genre=
 name
 */
-let storage = [];
 
-function create(data) {
-  storage.push(data);
+class genresServices {
+  constructor(){
+    this.storage = []
+  }
 
-  return 'save genre';
+  create(data) {
+    timeSpend.startTimer();
+    this.storage.push(data);
+    timeSpend.endTimer();
+
+    return 'save genre';
+  }
+
+  list() {
+    timeSpend.startTimer();
+    const list = '\n' + 'GENRES' + '\n'+ this.storage.map((genre, index) =>
+      (`${index}) name: ${genre.name}`)).join('\n')
+
+    timeSpend.endTimer();
+
+    return list
+  }
 }
 
-function list() {
-  return '\n' + 'GENRES' + '\n'+ storage.map((genre, index) =>
-    (`${index}) name: ${genre.name}`)).join('\n')
-}
-
-module.exports = {
-  create,
-  list
-};
+module.exports = genresServices;

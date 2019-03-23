@@ -23,6 +23,7 @@ const menu = async options => {
     console.log();
     if (list[userChoose]) {
       const result = await list[userChoose].execute();
+
       result && console.log('result: ', result);
     } else {
       console.error(`You choose bad comand`);

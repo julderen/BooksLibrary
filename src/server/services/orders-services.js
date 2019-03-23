@@ -1,23 +1,32 @@
+const timeSpend = require(`./timeSpend`);
 
 /*
 order=
 userId,
 booksId,
 */
-let storage = [];
 
-function create(data) {
-  storage.push(data);
+class ordersServices {
+  constructor(){
+    this.storage = []
+  }
 
-  return 'save order';
+  create(data) {
+    timeSpend.startTimer();
+    this.storage.push(data);
+    timeSpend.endTimer();
+
+    return 'save order';
+  }
+
+  list() {
+    timeSpend.startTimer();
+    const list = '\n' + 'ORDERS' + '\n'+this.storage.map((order, index) =>
+        (`${index}) userId: ${order.userId}, booksId: ${order.booksId}`)).join('\n')
+    timeSpend.endTimer();
+
+    return list
+  }
 }
 
-function list() {
-  return '\n' + 'ORDERS' + '\n'+storage.map((order, index) =>
-    (`${index}) userId: ${order.userId}, booksId: ${order.booksId}`)).join('\n')
-}
-
-module.exports = {
-  create,
-  list
-}
+module.exports = ordersServices;

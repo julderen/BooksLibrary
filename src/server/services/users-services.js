@@ -1,3 +1,5 @@
+const timeSpend = require(`./timeSpend`);
+
 /*
 user=
 name,
@@ -5,25 +7,34 @@ surname,
 address
 phone,
 */
-let storage = [];
 const userToString = ({name, surname, address, phone}) => `${name} ${surname} phone: ${phone} address: ${address}`
-function create(data) {
-  const user = storage.find(({ phone }) => phone === data.phone);
-  if (user) {
-    return `A user with such a phone exists (${userToString(user)})`;
+
+class usersServices {
+  constructor(){
+    this.storage = []
   }
 
-  storage.push(data);
+  create(data) {
+    const user = this.storage.find(({ phone }) => phone === data.phone);
+    if (user) {
+      return `A user with such a phone exists (${userToString(user)})`;
+    }
 
-  return 'save user';
+    timeSpend.startTimer();
+    this.storage.push(data);
+    timeSpend.endTimer();
+    return 'save user';
+  }
+
+  list() {
+    timeSpend.startTimer();
+    const list = '\n' + 'USERS' + '\n'+ this.storage.map((user, index) =>
+      (`${index}) ${userToString(user)}`)).join('\n')
+    timeSpend.endTimer();
+
+    return list
+  }
+
 }
 
-function list() {
-  return '\n' + 'USERS' + '\n'+ storage.map((user, index) =>
-    (`${index}) ${userToString(user)}`)).join('\n')
-}
-
-module.exports = {
-  create,
-  list
-};
+module.exports = usersServices;

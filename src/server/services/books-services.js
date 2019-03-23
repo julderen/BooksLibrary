@@ -1,3 +1,4 @@
+const timeSpend = require(`./timeSpend`);
 
 /*
 book=
@@ -5,20 +6,27 @@ name,
 author,
 genres
 */
-let storage = [];
 
-function create(data) {
-  storage.push(data);
+class booksServices {
+  constructor(){
+    this.storage = []
+  }
 
-  return 'save book';
+  create(data) {
+    timeSpend.startTimer();
+    this.storage.push(data);
+    timeSpend.endTimer();
+    return 'save book';
+  }
+
+  list() {
+    timeSpend.startTimer();
+    const list = '\n BOOKS \n'+this.storage.map((book, index) =>
+        (`${index}) name: ${book.name}, author: ${book.author}, genres: ${book.genres}, price: ${book.price}`)).join('\n')
+    timeSpend.endTimer();
+
+    return list
+  }
 }
 
-function list() {
-  return '\n' + 'BOOKS' + '\n'+storage.map((book, index) =>
-    (`${index}) name: ${book.name}, author: ${book.author}, genres: ${book.genres}, price: ${book.price}`)).join('\n')
-}
-
-module.exports = {
-  create,
-  list
-}
+module.exports = booksServices;

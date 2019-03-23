@@ -1,6 +1,7 @@
 const menu = require(`../../cli/menu`);
 const askUtils = require(`../../cli/utils/ask-utils`);
-const usersServices = require(`../services/users-services`);
+const di = require(`../services/di`);
+const usersServices = di.get('users');
 
 const create = {
   name: `create`,
