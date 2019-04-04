@@ -9,9 +9,9 @@ const create = {
   name: `create`,
   description: `Create order`,
   async execute() {
-    console.log(usersServices.list());
-    const userId = await askUtils.numberAsk('write user id: ');
-    console.log(booksServices.list());
+    console.log(await usersServices.list());
+    const userId = await askUtils.stringAsk('write user id: ');
+    console.log(await booksServices.list());
     let booksArray = [];
     try {
       const books = await askUtils.stringAsk(`write books id (', '): `);
@@ -20,7 +20,9 @@ const create = {
       console.error('Error in the input books')
     }
 
-    return ordersServices.create({ userId, booksId: booksArray });
+
+
+    return ordersServices.create({ userId }, booksArray);
   },
 };
 

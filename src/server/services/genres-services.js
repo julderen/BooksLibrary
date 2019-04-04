@@ -22,11 +22,16 @@ class genresServices {
     timeSpend.startTimer();
     const list = await Genres.findAll();
     const toString = '\n GENRES \n'+ list.map((genre, index) =>
-      (`${index}) name: ${genre.name}`)).join('\n')
+      (`${genre.id}) name: ${genre.name}`)).join('\n')
 
     timeSpend.endTimer();
 
     return toString;
+  }
+
+  async getById(id) {
+    timeSpend.startTimer();
+    return await Genres.findByPk(id);
   }
 }
 

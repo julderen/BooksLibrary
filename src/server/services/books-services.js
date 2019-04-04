@@ -15,16 +15,18 @@ class booksServices {
 
   async create(data) {
     timeSpend.startTimer();
-    console.log(await Books.create(data));
+    console.log(await Books.create(data, {
+      include: [ Genres ]
+    }));
     timeSpend.endTimer();
     return 'save book';
   }
 
   async list() {
     timeSpend.startTimer();
-    const list = await Books.findAll();
+    const list = await Books.findAll({ include: [ Genres ]});
     const toString = '\n BOOKS \n'+ list.map((book, index) =>
-      (`${index}) name: ${book.name}, author: ${book.author}, genre: ${book.genre}, price: ${book.price}`)).join('\n')
+      (`${book.id}) name: ${book.name}, author: ${book.author}, genre: ${book.Genre.name}, price: ${book.price}`)).join('\n')
 
     timeSpend.endTimer();
 

@@ -1,4 +1,5 @@
 const timeSpend = require(`./timeSpend`);
+const { Users } = require(`./db`);
 
 /*
 user=
@@ -10,29 +11,22 @@ phone,
 const userToString = ({name, surname, address, phone}) => `${name} ${surname} phone: ${phone} address: ${address}`
 
 class usersServices {
-  constructor(){
-    this.storage = []
-  }
-
-  create(data) {
-    const user = this.storage.find(({ phone }) => phone === data.phone);
-    if (user) {
-      return `A user with such a phone exists (${userToString(user)})`;
-    }
-
+  async create(data) {
     timeSpend.startTimer();
-    this.storage.push(data);
+    await Users.create(data);
     timeSpend.endTimer();
     return 'save user';
   }
 
-  list() {
+  async list() {
     timeSpend.startTimer();
-    const list = '\n' + 'USERS' + '\n'+ this.storage.map((user, index) =>
-      (`${index}) ${userToString(user)}`)).join('\n')
+    const list = await Users.findAll();
+
+    const toString = '\n' + 'USERS' + '\n'+ list.map((user, index) =>
+      (`${user.id}) ${userToString(user)}`)).join('\n');
     timeSpend.endTimer();
 
-    return list
+    return toString
   }
 
 }

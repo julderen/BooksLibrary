@@ -34,10 +34,31 @@ Books.init({
   price: Sequelize.INTEGER,
 }, { sequelize });
 
-Books.hasMany(Genres);
+class Orders extends Sequelize.Model {}
+Orders.init({
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+}, { sequelize });
 
-Genres.sync({ force: true});
-Books.sync({ force: true});
-Users.sync({ force: true});
+class OrdersBooks extends Sequelize.Model {}
+OrdersBooks.init({
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  count: Sequelize.INTEGER
+}, { sequelize });
 
-module.exports ={ sequelize, Genres, Books };
+Genres.hasMany(Books, {foreignKey: 'genreId', sourceKey: 'id'});
+Books.belongsTo(Genres, {foreignKey: 'genreId', targetKey: 'id'});
+
+Users.hasMany(Orders, {foreignKey: 'userId', sourceKey: 'id'});
+Orders.belongsTo(Users, {foreignKey: 'userId', targetKey: 'id'});
+
+Books.belongsToMany(Orders, { through: OrdersBooks });
+Orders.belongsToMany(Books, { through: OrdersBooks });
+
+
+Users.sync();
+Genres.sync();
+Books.sync();
+Orders.sync();
+OrdersBooks.sync();
+
+module.exports ={ sequelize, Genres, Books, Orders, Users, OrdersBooks };
