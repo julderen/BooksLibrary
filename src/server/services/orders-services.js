@@ -1,5 +1,5 @@
 const timeSpend = require(`./timeSpend`);
-const { Orders, Books, Users, OrdersBooks } = require(`./db`);
+const { Orders, Books, Users, OrdersBooks, Genres } = require(`./db`);
 
 /*
 order=
@@ -8,18 +8,19 @@ booksId,
 */
 
 class ordersServices {
-  async create(data, booksArray) {
+  async create({ userId, booksArray }) {
     timeSpend.startTimer();
-   const order = await Orders.create(data, {
+   const order = await Orders.create({ userId }, {
       include: [ Users ]
     });
    console.log('order', order);
+   console.log('booksArray', booksArray);
 
     for(let i = 0; i < booksArray.length; i++) {
       OrdersBooks.create({
         OrderId: order.id,
-        BookId: booksArray[i],
-        count: 1
+        BookId: booksArray[i].id,
+        count: booksArray[i].count
       })
     }
 
@@ -36,7 +37,7 @@ class ordersServices {
         (`${order.id}) userId: ${order.User.name}, booksId:${order.Books.map(({ name }) => name)}`)).join('\n')
     timeSpend.endTimer();
 
-    return toString
+    return list
   }
 }
 

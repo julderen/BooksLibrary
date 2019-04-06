@@ -1,5 +1,5 @@
 const timeSpend = require(`./timeSpend`);
-const { Genres } = require(`./db`);
+const { Genres, Books, Orders } = require(`./db`);
 
 /*
 genre=
@@ -20,13 +20,13 @@ class genresServices {
 
   async list() {
     timeSpend.startTimer();
-    const list = await Genres.findAll();
+    const list = await Genres.findAll({ include: [{ model: Books, include: [ Orders ] }]});
     const toString = '\n GENRES \n'+ list.map((genre, index) =>
       (`${genre.id}) name: ${genre.name}`)).join('\n')
 
     timeSpend.endTimer();
 
-    return toString;
+    return list;
   }
 
   async getById(id) {

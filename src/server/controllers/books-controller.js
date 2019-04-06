@@ -1,43 +1,15 @@
-const menu = require(`../../cli/menu`);
-const askUtils = require(`../../cli/utils/ask-utils`);
+const {Router} = require(`express`);
 const di = require(`../services/di`);
-const genresServices = di.get('genres');
+
 const booksServices = di.get('books');
 
-const create = {
-  name: `create`,
-  description: `Create books`,
-  async execute() {
-    const name = await askUtils.stringAsk('write book name: ');
-    const author = await askUtils.stringAsk('write book author: ');
-    const price = await askUtils.numberAsk('write book price: ');
-    console.log(await genresServices.list());
-    const genreId = await askUtils.numberAsk('write book genre: ');
+const postRouter = new Router();
 
-    return booksServices.create({ name, author, genreId, price });
-  },
-};
+postRouter.get(`/`, async ({query: {limit, skip}}, res) => res.json(await booksServices.list()));
 
-const booksList = {
-  name: `list`,
-  description: `Shows books`,
-  execute() {
-    return booksServices.list();
-  },
-};
+postRouter.post(`/`, (async ({body: book}, res) => {
+  const data = await booksServices.create(book);
+  return res.json(data);
+}));
 
-const list = [create, booksList];
-
-module.exports = {
-  name: `books`,
-  description: `menu works with books`,
-  execute() {
-    return (async function IEE() {
-      try {
-        await menu(list);
-      } catch (err) {
-        console.error(err);
-      }
-    })();
-  },
-};
+module.exports = postRouter;
